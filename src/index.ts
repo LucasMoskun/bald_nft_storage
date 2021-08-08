@@ -1,4 +1,4 @@
-import {NFTStorage} from "./NFTStorage.js"
+import {NFTStorageAccess} from "./NFTStorageAccess.js"
 
 console.log("hello world");
 
@@ -12,5 +12,5 @@ void async function main()
     console.log(result + " world async")
 }()
 
-let nftStorage = new NFTStorage();
+let nftStorageAccess = new NFTStorageAccess();
 
