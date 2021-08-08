@@ -17,5 +17,11 @@
   "bugs": {
     "url": "https://github.com/LucasMoskun/bald_nft_storage/issues"
   },
-  "homepage": "https://github.com/LucasMoskun/bald_nft_storage#readme"
+  "homepage": "https://github.com/LucasMoskun/bald_nft_storage#readme",
+  "devDependencies": {
+    "@types/node": "^16.4.13",
+    "nodemon": "^2.0.12",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
+  }
 }
