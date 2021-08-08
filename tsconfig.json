@@ -5,6 +5,7 @@
         "lib": ["dom", "esnext"],
         "outDir": "./dist",
         "rootDir": "./src", 
-        "moduleResolution":"Node"
+        "moduleResolution":"Node",
+        "module":"ESNext"
     }
 }
