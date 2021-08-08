@@ -1,4 +1,5 @@
 import {NFTStorage} from "./NFTStorage.js"
+
 console.log("hello world");
 
 async function hello() {
