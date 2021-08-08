@@ -1,0 +1,21 @@
+{
+  "name": "bald_nft_storage",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LucasMoskun/bald_nft_storage.git"
+  },
+  "keywords": [],
+  "author": "Lucas Moskun <Contact@LucasMoskun.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LucasMoskun/bald_nft_storage/issues"
+  },
+  "homepage": "https://github.com/LucasMoskun/bald_nft_storage#readme"
+}
