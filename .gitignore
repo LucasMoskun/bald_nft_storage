@@ -2,6 +2,9 @@
 storage_upload/src/STORAGE_API_KEY.ts
 storage_upload/dist/STORAGE_API_KEY.js
 
+#ds store
+**/.DS_Store
+
 # Logs
 logs
 *.log

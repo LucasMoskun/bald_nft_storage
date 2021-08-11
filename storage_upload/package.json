@@ -22,11 +22,13 @@
   "homepage": "https://github.com/LucasMoskun/bald_nft_storage#readme",
   "devDependencies": {
     "@types/node": "^16.4.13",
+    "@types/node-fetch": "^2.5.12",
     "nodemon": "^2.0.12",
     "ts-node": "^10.1.0",
     "typescript": "^4.3.5"
   },
   "dependencies": {
-    "nft.storage": "^3.0.1"
+    "nft.storage": "^3.0.1",
+    "node-fetch": "^2.6.1"
   }
 }
