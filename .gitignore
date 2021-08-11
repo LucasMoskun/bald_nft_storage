@@ -1,6 +1,6 @@
 #API Keys
-src/STORAGE_API_KEY.ts
-dist/STORAGE_API_KEY.js
+storage_upload/src/STORAGE_API_KEY.ts
+storage_upload/dist/STORAGE_API_KEY.js
 
 # Logs
 logs
