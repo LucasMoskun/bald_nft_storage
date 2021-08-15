@@ -9,7 +9,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private TokenIds;
 
-    constructor() public ERC721("CreepKidsNFT", "CK") {}
+    constructor() public ERC721("Creep Kids_t0", "CKt0") {}
 
     function safeMint(address to, uint256 tokenId) public onlyOwner {
         _safeMint(to, tokenId);

@@ -1,6 +1,7 @@
+
 async function main() {
   const [deployer] = await ethers.getSigners();
-  console.log("Deploying contracts woth the account: ", deployer.address);
+  console.log("Deploying contracts with the account: ", deployer.address);
 
   console.log("Account balance:", (await deployer.getBalance()).toString());
   const contract = await ethers.getContractFactory("CreepKidsNFT");

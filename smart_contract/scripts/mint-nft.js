@@ -11,7 +11,7 @@ let web3 = new Web3(
 );
 
 const contractJson = require("../artifacts/contracts/CreepKidsNFT.sol/CreepKidsNFT.json")
-const contractAddress = "0x2f583Fa91ef74DACfFeadA0F47C60bB1c19AEAF3";
+const contractAddress = "0xa6295986DC8706b61Fec4431629FFB5339cCeBf6";
 const contract = new web3.eth.Contract(contractJson.abi, contractAddress);
 
 async function mintNFT(tokenURI) {
@@ -49,5 +49,5 @@ async function mintNFT(tokenURI) {
     })
 }
 
-mintNFT("https://ipfs.io/ipfs/bafyreigsv3ea6ggjwtuwjxj2gr43hb3qopqoj6tzoekbce2yzesjyf7wn4/metadata.json");
+mintNFT("https://ipfs.io/ipfs/bafyreifca2qxtlddhepns6dwmd3fr7z5slct2kr3kof6s4ai635dymuxfa/metadata.json");
 

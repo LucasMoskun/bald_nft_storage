@@ -12,19 +12,25 @@ export class NFTStorageAccess {
     {
         const client = new NFTStorage({ token: STORAGE_API_KEY })
         
-        const fileUri =  "http://127.0.0.1:8080/demon.gif";
+        const fileUri =  "http://127.0.0.1:8080/sea_monster.gif";
 
         const httpResponse = await fetch(fileUri);
         const buffer: ArrayBuffer = await httpResponse.arrayBuffer();
         const bytes: Uint8Array = new Uint8Array(buffer);
 
         const metadata = await client.store({
-            name: 'pug_life',
-            description: 'A fearless pug',
-            image: new File([bytes], 'demon.gif', { type: 'image/gif' }),
+            name: 'sea_monster',
+            description: 'cool vibes from the deep',
+            image: new File([bytes], 'sea_monster.gif', { type: 'image/gif' }),
             properties: {
-                cuteness: 'Off the charts',
-                friendlieness: 'limitless'
+                strength: '80',
+                evilness: '95',
+                intelligencex: '60',
+                agility: '85',
+                luck: '90',
+                charm: '86',
+                magic: '79',
+                health: '88'
             }
         })
 
