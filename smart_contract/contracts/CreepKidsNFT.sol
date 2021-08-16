@@ -5,11 +5,19 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+import "hardhat/console.sol";
+
 contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private TokenIds;
 
     constructor() public ERC721("Creep Kids_t0", "CKt0") {}
+
+    function testLog()
+    public
+    {
+        console.log("Hello World, I'm Creep Kids Smart Contract");
+    }
 
     function safeMint(address to, uint256 tokenId) public onlyOwner {
         _safeMint(to, tokenId);
