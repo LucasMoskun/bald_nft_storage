@@ -6,7 +6,7 @@ require("@nomiclabs/hardhat-waffle")
 const {API_URL, METAMASK_PRIVATE_KEY} = process.env;
 module.exports = {
   solidity: "0.8.0",
-  defaultNetwork: "rinkeby",
+  defaultNetwork: "hardhat",
   networks: {
     hardhat: {},
     rinkeby: {
