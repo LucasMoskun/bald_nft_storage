@@ -3,7 +3,8 @@
  */
 require('dotenv').config();
 require("@nomiclabs/hardhat-waffle")
-const {API_URL, METAMASK_PRIVATE_KEY} = process.env;
+require("hardhat-gas-reporter");
+const {API_URL, METAMASK_PRIVATE_KEY, COIN_API} = process.env;
 module.exports = {
   solidity: "0.8.0",
   defaultNetwork: "hardhat",
@@ -20,4 +21,8 @@ module.exports = {
     cache: "./cache",
     artifacts: "./artifacts"
   },
+  gasReporter: {
+    coinmarketcap: COIN_API,
+    currency: "USD"
+  }
 };
