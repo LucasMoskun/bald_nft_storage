@@ -11,12 +11,28 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private TokenIds;
 
-    constructor() public ERC721("Creep Kids_t0", "CKt0") {}
+    uint[] MintOrder;
 
-    function testLog()
-    public
-    {
-        console.log("Hello World, I'm Creep Kids Smart Contract");
+    constructor() public ERC721("Creep Kids_t0", "CKt0") {
+        //Build and shuffle mint order for random minting
+        uint count = 5;
+        MintOrder = new uint[](count);
+
+        for(uint i = 0; i < count; i++){
+            MintOrder[i] = i;
+        }
+        ShuffleMintOrder();
+    }
+
+    function ShuffleMintOrder() private {
+        for(uint i = 0; i < MintOrder.length; i++){
+            uint randIndex = 
+                i + uint256(keccak256(abi.encodePacked(block.timestamp))) %
+                (MintOrder.length - i);
+            uint holder = MintOrder[randIndex];
+            MintOrder[randIndex] = MintOrder[i];
+            MintOrder[i] = holder;
+        }
     }
 
     function safeMint(address to, uint256 tokenId) public onlyOwner {

@@ -22,6 +22,5 @@ describe("Creep Kid Test", function() {
     console.log("Owner balance: ", ownerBalance);
     
     expect(await hardhatToken.balanceOf(owner.address)).to.equal(ownerBalance);
-    hardhatToken.testLog();
   });    
 });
