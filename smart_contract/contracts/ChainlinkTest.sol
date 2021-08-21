@@ -13,7 +13,11 @@ contract ChainlinkTest is ChainlinkClient {
 
     string public Message;
 
+    event ConstructorEvent();
+
     constructor() public {
+        emit ConstructorEvent();
+
         setPublicChainlinkToken();
         oracle = 0x2B5c312BC610E27cA9acB0fe5b8Fc41D7DD84456;
         jobId = "43c65516ffbb4da596efd0f73e014133";
