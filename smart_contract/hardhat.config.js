@@ -4,6 +4,8 @@
 require('dotenv').config();
 require("@nomiclabs/hardhat-waffle")
 require("hardhat-gas-reporter");
+require("hardhat-etherscan-abi")
+
 const {API_URL, METAMASK_PRIVATE_KEY, COIN_API} = process.env;
 module.exports = {
   solidity: "0.8.0",

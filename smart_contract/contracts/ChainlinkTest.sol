@@ -14,6 +14,7 @@ contract ChainlinkTest is ChainlinkClient {
     string public Message;
 
     event ConstructorEvent();
+    event FulfillEvent();
 
     constructor() public {
         emit ConstructorEvent();
@@ -27,13 +28,14 @@ contract ChainlinkTest is ChainlinkClient {
     function requestByteData() public returns (bytes32 requestId)
     {
         Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
-        request.add("get", "http://localhost:8080/test.json");
-        request.add("path", "time");
+        request.add("get", "https://ipfs.io/ipfs/bafyreifca2qxtlddhepns6dwmd3fr7z5slct2kr3kof6s4ai635dymuxfa/metadata.json");
+        request.add("path", "name");
         return sendChainlinkRequestTo(oracle, request, fee);
     }
 
     function fulfill(bytes32 requestId, bytes32 data) public recordChainlinkFulfillment(requestId)
     {
+        emit FulfillEvent();
         Message = bytes32ToString(data);
     }
 
