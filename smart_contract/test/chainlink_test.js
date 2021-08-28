@@ -20,7 +20,6 @@ describe("Chainlink Test", function () {
     //await expect(contract.deployTransaction).to.emit(contract, "ConstructorEvent");
     //console.log("after await event");
 
-
     //get LINK contract
     const linkContract = await hre.ethers.getVerifiedContractAt('0x01be23585060835e02b77ef475b0cc51aa1e0709');
     await linkContract.connect(owner.address);
@@ -44,6 +43,8 @@ describe("Chainlink Test", function () {
     console.log("Request ID done waiting: ", requestID);
     console.log("Request ID: ", id);
 
+    //wait 30 secs for oracle to callback
+    await new Promise(resolve => setTimeout(resolve, 30000))
     const message = await contract.getMessage();
     console.log("message: ", message);
     //await expect(contract).to.emit(contract, "FulfillEvent");

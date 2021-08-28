@@ -14,6 +14,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable, ChainlinkClient {
 
     Counters.Counter private TokenIds;
     uint[] MintOrder;
+    mapping (uint32 => address) TokenToAddress;
     
     //chainlink
     event URIFulfillEvent();
@@ -23,7 +24,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable, ChainlinkClient {
     uint256 private fee;
     string public Message;
 
-    constructor() public ERC721("Creep Kids_t1", "CKt1") {
+    constructor() public ERC721("Creep Kids_t2", "CKt2") {
         //Build and shuffle mint order for random minting
         uint count = 5;
         MintOrder = new uint[](count);
@@ -77,6 +78,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable, ChainlinkClient {
         uint256 newID = TokenIds.current();
         _mint(receiver, newID);
         _setTokenURI(newID, tokenURI);
+        console.log("Minted new nft");
 
         return newID;
     }
@@ -90,8 +92,26 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable, ChainlinkClient {
         return sendChainlinkRequestTo(oracle, request, fee);
     }
 
+    function MintCreepKid() public returns (bytes32 requestId)
+    {
+        console.log("mint sender: ", msg.sender);
+        TokenToAddress[0] = msg.sender;
+        Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
+        request.add("get", "https://ipfs.io/ipfs/bafyreifca2qxtlddhepns6dwmd3fr7z5slct2kr3kof6s4ai635dymuxfa/metadata.json");
+        request.add("path", "name");
+        return sendChainlinkRequestTo(oracle, request, fee);
+    }
+
     function fulfill(bytes32 requestId, bytes32 data) public recordChainlinkFulfillment(requestId)
     {
+        console.log("fulfill sender: ", msg.sender);
+        
+        TokenIds.increment();
+
+        uint256 newID = TokenIds.current();
+        _mint(TokenToAddress[0], newID);
+        _setTokenURI(newID,"https://ipfs.io/ipfs/bafyreifca2qxtlddhepns6dwmd3fr7z5slct2kr3kof6s4ai635dymuxfa/metadata.json");
+        //CreateNFT(TokenToAddress[0], "https://ipfs.io/ipfs/bafyreifca2qxtlddhepns6dwmd3fr7z5slct2kr3kof6s4ai635dymuxfa/metadata.json");
         emit URIFulfillEvent();
         Message = bytes32ToString(data);
     }
