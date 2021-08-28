@@ -1,4 +1,5 @@
 const {expect} = require("chai");
+const helper = require("@chainlink/test-helpers");
 
 describe("Chainlink Test", function () {
   this.timeout(80000)
@@ -38,8 +39,10 @@ describe("Chainlink Test", function () {
 
     console.log("Requesting data...");
     const requestID = await contract.requestByteData();
-    await requestID.wait();
-    console.log("Request ID done waiting");
+    const receipt = await requestID.wait();
+    const id = helper.decodeRunRequest(receipt.rawLogs[3]);
+    console.log("Request ID done waiting: ", requestID);
+    console.log("Request ID: ", id);
 
     const message = await contract.getMessage();
     console.log("message: ", message);
