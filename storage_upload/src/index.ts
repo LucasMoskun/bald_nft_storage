@@ -13,6 +13,6 @@ import { TestJson } from "./TestJson.js"
 //    console.log(result + " world async")
 //}()
 console.log("Starting nft.storage upload...");
-//let nftStorageAccess = new NFTStorageAccess();
-let testJson = new TestJson();
+let nftStorageAccess = new NFTStorageAccess();
+//let testJson = new TestJson();
 

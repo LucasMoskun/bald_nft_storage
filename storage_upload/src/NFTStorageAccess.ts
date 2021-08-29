@@ -5,7 +5,8 @@ import fetch from "node-fetch";
 export class NFTStorageAccess {
     constructor()
     {
-        this.uploadNFT();
+        //this.uploadNFT();
+        this.uploadMainList();
     }
 
     async uploadNFT()
@@ -37,5 +38,32 @@ export class NFTStorageAccess {
         console.log('IPFS URL for the metadata:', metadata.url)
         console.log('metadata.json contents:\n', metadata.data)
         console.log('metadata.json with IPFS gateway URLs:\n', metadata.embed())
+    }
+
+    async uploadMainList()
+    {
+        const client = new NFTStorage({ token: STORAGE_API_KEY });
+
+        const metaFileUri = "http://127.0.0.1:8080/json/CreepKidsMetadataDict.json";
+        const imageUri =  "http://127.0.0.1:8080/gif/devo.gif";
+
+        const metaResponse = await fetch(metaFileUri);
+        const metaJson = await metaResponse.json();
+
+        const imageResponse = await fetch(imageUri);
+        const buffer: ArrayBuffer = await imageResponse.arrayBuffer();
+        const bytes: Uint8Array = new Uint8Array(buffer);
+
+        const metadata = await client.store({
+            name: 'main_data',
+            description: 'dictionary of id to uri',
+            image: new File([bytes], 'devo.gif', { type: 'image/gif' }),
+            properties: metaJson
+        })
+
+        console.log('IPFS URL for the metadata:', metadata.url)
+        console.log('metadata.json contents:\n', metadata.data)
+        console.log('metadata.json with IPFS gateway URLs:\n', metadata.embed())
+
     }
 }
