@@ -1,4 +1,5 @@
 import {NFTStorageAccess} from "./NFTStorageAccess.js"
+import { TestJson } from "./TestJson.js"
 
 //console.log("hello world");
 //
@@ -12,5 +13,6 @@ import {NFTStorageAccess} from "./NFTStorageAccess.js"
 //    console.log(result + " world async")
 //}()
 console.log("Starting nft.storage upload...");
-let nftStorageAccess = new NFTStorageAccess();
+//let nftStorageAccess = new NFTStorageAccess();
+let testJson = new TestJson();
 
