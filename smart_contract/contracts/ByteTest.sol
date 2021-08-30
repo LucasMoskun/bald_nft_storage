@@ -6,9 +6,9 @@ contract ByteTest {
     constructor() public {
         console.log("Byte Test Constructor");
 
-        string memory testString1 = "test1";
+        string memory testString1 = "bafyreigsv3ea6ggjwtuwjxj2gr43hb3";
         console.log("TestString1: ",testString1);
-        string memory testString2 = "test2isLonger";
+        string memory testString2 = "qopqoj6tzoekbce2yzesjyf7wn4";
         console.log("TestString1: ", testString1);
         bytes32 testBytes1 = stringToBytes32(testString1);
         bytes32 testBytes2 = stringToBytes32(testString2);
