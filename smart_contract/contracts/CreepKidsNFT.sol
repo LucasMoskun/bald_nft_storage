@@ -23,24 +23,24 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable, ChainlinkClient {
     bytes32 private jobId;
     uint256 private fee;
     string public Message;
-    mapping(bytes32 => address) requestToSender;
-    mapping(bytes32 => uint256) requestToTokenId;
+    mapping(bytes32 => address) private requestToSender;
+    mapping(bytes32 => uint256) private requestToTokenId;
 
     constructor() public ERC721("Creep Kids_t2", "CKt2") {
-        //Build and shuffle mint order for random minting
-       // uint count = 5;
-       // MintOrder = new uint[](count);
-
-       // for(uint i = 0; i < count; i++){
-       //     MintOrder[i] = i;
-       // }
-       // ShuffleMintOrder();
-
         //chainlink
         setPublicChainlinkToken();
         oracle = 0x2B5c312BC610E27cA9acB0fe5b8Fc41D7DD84456;
         jobId = "43c65516ffbb4da596efd0f73e014133";
         fee = 0.1 * 10 ** 18;
+    }
+
+    function InitMinitOrder() private {
+       uint count = 5;
+       MintOrder = new uint[](count);
+
+       for(uint i = 0; i < count; i++){
+           MintOrder[i] = i;
+       }
     }
 
     function ShuffleMintOrder() private {
