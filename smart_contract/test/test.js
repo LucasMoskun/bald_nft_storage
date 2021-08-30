@@ -39,6 +39,10 @@ describe("Creep Kid Test", function() {
     console.log("Transfer requested");
     await linkTransfer.wait();
 
+    const linkTransfer2 = await linkContract.transfer(contract.address, linkValue.toString());
+    console.log("Transfer requested");
+    await linkTransfer2.wait();
+
     
     //await contract.transfer(contract.address, .01);
 

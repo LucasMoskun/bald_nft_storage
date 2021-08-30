@@ -3,18 +3,33 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 
 contract ByteTest {
+
+    mapping(bytes32 => bytes32) testMap;    
+    
     constructor() public {
         console.log("Byte Test Constructor");
 
         string memory testString1 = "bafyreigsv3ea6ggjwtuwjxj2gr43hb3";
         console.log("TestString1: ",testString1);
         string memory testString2 = "qopqoj6tzoekbce2yzesjyf7wn4";
-        console.log("TestString1: ", testString1);
+        console.log("TestString2: ", testString2);
         bytes32 testBytes1 = stringToBytes32(testString1);
         bytes32 testBytes2 = stringToBytes32(testString2);
-        bytes memory concatenatedBytes = concatenate(testBytes1,testBytes2);
+        bytes memory concatenatedBytes;
+        concatenatedBytes = concatenate(testBytes1,testBytes2);
         string memory result = bytesToString(concatenatedBytes);
         console.log("result: ",result);
+
+        bytes32 testMapBytes = testMap[testBytes1];
+        if(testMapBytes != 0){
+            console.log("Failed null check");
+        }
+
+        testMap[testBytes1] = testBytes1;
+        testMapBytes = testMap[testBytes1];
+        if(testMapBytes != 0){
+            console.log("Passed value check");
+        }
     }
 
     function concatenate(bytes32 x, bytes32 y) public pure returns (bytes memory) {
