@@ -25,6 +25,9 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable, ChainlinkClient {
     string public Message;
     mapping(bytes32 => address) private requestToSender;
     mapping(bytes32 => uint256) private requestToTokenId;
+    mapping(bytes32 => bytes32) private requestToPrimary;
+    mapping(bytes32 => bytes32) private requestToFirstArrival;
+    string private metadataPath;  
 
     constructor() public ERC721("Creep Kids_t2", "CKt2") {
         //chainlink
@@ -32,6 +35,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable, ChainlinkClient {
         oracle = 0x2B5c312BC610E27cA9acB0fe5b8Fc41D7DD84456;
         jobId = "43c65516ffbb4da596efd0f73e014133";
         fee = 0.1 * 10 ** 18;
+        metadataPath = "https://ipfs.io/ipfs/bafyreifca2qxtlddhepns6dwmd3fr7z5slct2kr3kof6s4ai635dymuxfa/metadata.json";
     }
 
     function InitMinitOrder() private {
@@ -99,18 +103,28 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable, ChainlinkClient {
         console.log("mint sender: ", msg.sender);
         uint256 intID = TokenIds.current();
         string memory stringID = uintToString(intID);
-        string memory requestPath = string(abi.encodePacked("properties.", stringID));
+        string memory pathBase =  string(abi.encodePacked("properties.", stringID));
+        string memory primaryRequestPath = string(abi.encodePacked(pathBase, ".1"));
+        string memory secondRequestPath = string(abi.encodePacked(pathBase, ".2"));
         TokenIds.increment();
 
-        Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
-        request.add("get", "https://ipfs.io/ipfs/bafyreihcokiugahvrqayledae2ivmjff5xkq2xsmnvv62lrne6crlhfbey/metadata.json");
-        request.add("path", requestPath);
+        Chainlink.Request memory primaryRequest = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
+        Chainlink.Request memory secondRequest = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
 
-        bytes32 requestID =  sendChainlinkRequestTo(oracle, request, fee);
-        requestToSender[requestID] = msg.sender;
-        requestToTokenId[requestID] = intID;
+        primaryRequest.add("get", metadataPath);
+        primaryRequest.add("path", primaryRequestPath);
 
-        return requestID;
+        secondRequest.add("get", metadataPath);
+        secondRequest.add("path", secondRequestPath);
+
+        bytes32 primaryRequestID = sendChainlinkRequestTo(oracle, primaryRequest, fee);
+        bytes32 secondRequestID = sendChainlinkRequestTo(oracle, secondRequest, fee);
+
+        requestToPrimary[secondRequestID] = primaryRequestID;
+        requestToSender[primaryRequestID] = msg.sender;
+        requestToTokenId[primaryRequestID] = intID;
+        
+        return primaryRequestID;
     }
 
     function fulfill(bytes32 requestId, bytes32 data) public recordChainlinkFulfillment(requestId)
