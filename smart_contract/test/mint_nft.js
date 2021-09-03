@@ -1,4 +1,3 @@
-
 const {expect} = require("chai");
  
 describe("Creep Kid Test", function() {
