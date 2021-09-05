@@ -6,7 +6,8 @@ export class NFTStorageAccess {
     constructor()
     {
         //this.uploadNFT();
-        this.uploadMainList();
+        //this.uploadMainList();
+        this.uploadDirectory();
     }
 
     async uploadNFT()
@@ -64,6 +65,28 @@ export class NFTStorageAccess {
         console.log('IPFS URL for the metadata:', metadata.url)
         console.log('metadata.json contents:\n', metadata.data)
         console.log('metadata.json with IPFS gateway URLs:\n', metadata.embed())
+
+    }
+
+    async uploadDirectory()
+    {
+        const client = new NFTStorage({ token: STORAGE_API_KEY });
+        const url1 = "https://ipfs.io/ipfs/bafyreifca2qxtlddhepns6dwmd3fr7z5slct2kr3kof6s4ai635dymuxfa/metadata.json";
+        const url2 = "https://ipfs.io/ipfs/bafyreigsv3ea6ggjwtuwjxj2gr43hb3qopqoj6tzoekbce2yzesjyf7wn4/metadata.json";
+
+        const metaResponse = await fetch(url1);
+        const metaJson = await metaResponse.json();
+        const fileData = JSON.stringify(metaJson);
+
+        const metaResponse2 = await fetch(url2);
+        const metaJson2 = await metaResponse2.json();
+        const fileData2 = JSON.stringify(metaJson2);
+
+        console.log("Fetched Data 1: ", metaJson);
+        console.log("Fetched Data 2: ", metaJson2);
+        const testFile: File = new File([fileData],"0");
+        const testFile2: File = new File([fileData2],"1");
+        console.log("Created file");
 
     }
 }
