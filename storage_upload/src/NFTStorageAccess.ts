@@ -88,5 +88,14 @@ export class NFTStorageAccess {
         const testFile2: File = new File([fileData2],"1");
         console.log("Created file");
 
+        const cid = await client.storeDirectory([
+            testFile,
+            testFile2
+        ])
+        console.log("Directory cid: ", cid);
+        const status = await client.status(cid);
+        console.log("Storage status: ", status);
+
+
     }
 }
