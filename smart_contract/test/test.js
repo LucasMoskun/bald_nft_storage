@@ -20,40 +20,19 @@ describe("Creep Kid Test", function() {
     const contract = await token.deploy();
     console.log("Contract address:" + contract.address);
 
-    //const ownerBalance = await contract.balanceOf(addr1.address);
-    //console.log("Owner balance: ", ownerBalance);
-    
-    //expect(await contract.balanceOf(owner.address)).to.equal(ownerBalance);
-    
-    //get LINK contract
-    const linkContract = await hre.ethers.getVerifiedContractAt('0x01be23585060835e02b77ef475b0cc51aa1e0709');
-    await linkContract.connect(owner.address);
-    console.log("link contract established");
-
-    const name = await linkContract.name();
-    console.log("name: ", name);
-
-    const linkValue = 0.1 * 10 ** 18;
-    console.log(linkValue);
-    const linkTransfer = await linkContract.transfer(contract.address, linkValue.toString());
-    console.log("Transfer requested");
-    await linkTransfer.wait();
-
-    const linkTransfer2 = await linkContract.transfer(contract.address, linkValue.toString());
-    console.log("Transfer requested");
-    await linkTransfer2.wait();
-
-    
-    //await contract.transfer(contract.address, .01);
 
     console.log("Requesting data...");
-    const requestID = await contract.MintCreepKid();
-    const receipt = await requestID.wait();
-    const id = receipt.events[0].topics[1];
-    console.log("Request ID: ", id);
+    const mintTx = await contract.createCreepKid(owner.address);
+    const receipt = await mintTx.wait();
+    console.log("Token ID: ", receipt.events?.filter((x) => {return x.event == "TokenMintEvent"}));
+    console.log("Token URI: ", await contract.getMessage());
 
+    console.log("Requesting data...");
+    const mintTx2 = await contract.createCreepKid(owner.address);
+    const receipt2 = await mintTx2.wait();
+    console.log("Token ID: ", receipt2.events?.filter((x) => {return x.event == "TokenMintEvent"}));
+    console.log("Token URI: ", await contract.getMessage());
     
-    await new Promise(resolve => setTimeout(resolve, 60000))
     console.log("Exiting");
 
   });    
