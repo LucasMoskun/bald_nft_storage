@@ -7,20 +7,21 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "hardhat/console.sol";
 
-contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable, ChainlinkClient {
+contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private TokenIds;
     uint[] MintOrder;
     mapping (uint32 => address) TokenToAddress;
     
-    //chainlink
     event URIFulfillEvent();
     string private metadataPath;  
 
+    string private Message;
+
     constructor() public ERC721("Creep Kids_t3", "CKt3") {
         //chainlink
-        metadataPath = "https://ipfs.io/ipfs/bafyreig5abkcdx2urgtl7fmor5fwb64ywurxxoj7syys42r65vkpsirgqi/metadata.json";
+        metadataPath = "ipfs://bafybeief4viwwiu5xh2i6ortt4mj7v3t4iyk473kjo52ajyrdx46nmbvyei/";
     }
 
     function InitMinitOrder() private {
@@ -60,17 +61,19 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable, ChainlinkClient {
         return super.tokenURI(tokenId);
     }
 
-    function CreateNFT(address receiver, string memory tokenURI)
+    function createCreepKid(address receiver)
         public onlyOwner
         returns(uint256)
     {
-        TokenIds.increment();
-
+        
         uint256 newID = TokenIds.current();
+        string memory stringID = uintToString(newID);
+        string memory tokenURI = string(abi.encodePacked(metadataPath, stringID));
         _mint(receiver, newID);
         _setTokenURI(newID, tokenURI);
         console.log("Minted new nft");
 
+        TokenIds.increment();
         return newID;
     }
 
