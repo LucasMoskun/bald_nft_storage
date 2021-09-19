@@ -2,6 +2,11 @@
 storage_upload/src/STORAGE_API_KEY.ts
 storage_upload/dist/STORAGE_API_KEY.js
 
+#Assets
+asset_host/gif
+asset_host/json
+asset_host/public
+
 #ds store
 **/.DS_Store
 
