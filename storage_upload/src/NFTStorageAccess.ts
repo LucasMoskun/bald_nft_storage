@@ -1,13 +1,53 @@
 import { STORAGE_API_KEY } from "./STORAGE_API_KEY.js";
 import { NFTStorage, File } from "nft.storage";
-import fetch from "node-fetch";
+import nodeFetch, {RequestInit} from "node-fetch";
+import {FormData} from 'formdata-node'
+//import * as FormData from 'form-data';
 
 export class NFTStorageAccess {
     constructor()
     {
         //this.uploadNFT();
         //this.uploadMainList();
-        this.uploadDirectory();
+        //this.uploadDirectory();
+        this.testMetadataPost();
+    }
+
+    async testMetadataPost()
+    {
+        const jsonObj = {
+            name: 'sea_monster',
+            description: 'cool vibes from the deep',
+            properties: {
+                strength: '80',
+                evilness: '95',
+                intelligencex: '60',
+                agility: '85',
+                luck: '90',
+                charm: '86',
+                magic: '79',
+                health: '88'
+            }
+        };
+
+        const fileData = JSON.stringify(jsonObj);
+        const fileUri =  "http://127.0.0.1:3000/storage_uri";
+        const response = await nodeFetch(fileUri,{
+            method: 'POST',
+            body: fileData,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'}
+        });
+    }
+    async uploadCharacterSet()
+    {
+        const client = new NFTStorage({ token: STORAGE_API_KEY })
+        //Get list of file names
+        //cycle through all assets
+        //get gif
+        //get metadata
+        //upload asset
+        //write out uri link
+        
     }
 
     async uploadNFT()

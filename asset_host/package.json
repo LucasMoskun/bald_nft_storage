@@ -1,0 +1,16 @@
+{
+  "name": "asset_host",
+  "version": "1.0.0",
+  "description": "serve & reveive creep kid assets and data",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lucas Moskun <Contact@LucasMoskun.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "multer": "^1.4.3"
+  }
+}
