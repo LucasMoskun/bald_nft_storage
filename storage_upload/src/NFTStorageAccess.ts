@@ -49,6 +49,13 @@ export class NFTStorageAccess {
         return metaJson
     }
 
+    async GetCharacterDescriptor(metaPath)
+    {
+        const dataResponse = await nodeFetch(metaPath);
+        const dataJson = await dataResponse.json();
+        return dataJson;
+    }
+
     async uploadCharacterSet()
     {
         const client = new NFTStorage({ token: STORAGE_API_KEY })
@@ -56,6 +63,11 @@ export class NFTStorageAccess {
         const characters = await this.GetCharacterList()
         console.log(characters)
         console.log(characters.names[0])
+
+        const name = characters.names[0];
+        const metaPath = "http://127.0.0.1:3000/output/v5/" + name + "/meta/" + name + ".json";
+        const descriptor = await this.GetCharacterDescriptor(metaPath);
+        console.log(descriptor.count);
         //cycle through all assets
         //get gif
         //get metadata
