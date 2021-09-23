@@ -10,7 +10,8 @@ export class NFTStorageAccess {
         //this.uploadNFT();
         //this.uploadMainList();
         //this.uploadDirectory();
-        this.testMetadataPost();
+        //this.testMetadataPost();
+        this.uploadCharacterSet();
     }
 
     async testMetadataPost()
@@ -38,10 +39,23 @@ export class NFTStorageAccess {
             headers: {'Content-Type': 'application/json; charset=UTF-8'}
         });
     }
+    
+    async GetCharacterList()
+    {
+        const metaFileUri = "http://127.0.0.1:3000/output/v5/character_names.json";
+
+        const metaResponse = await nodeFetch(metaFileUri);
+        const metaJson = await metaResponse.json();
+        return metaJson
+    }
+
     async uploadCharacterSet()
     {
         const client = new NFTStorage({ token: STORAGE_API_KEY })
         //Get list of file names
+        const characters = await this.GetCharacterList()
+        console.log(characters)
+        console.log(characters.names[0])
         //cycle through all assets
         //get gif
         //get metadata
