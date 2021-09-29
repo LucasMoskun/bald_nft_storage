@@ -10,13 +10,13 @@ export class NFTStorageAccess {
         //this.uploadNFT();
         //this.uploadMainList();
         //this.uploadDirectory();
-        //this.testMetadataPost();
-        this.uploadCharacterSet();
+        this.testMetadataPost();
+        //this.uploadCharacterSet();
     }
 
     async testMetadataPost()
     {
-        const jsonObj = {
+        const nftData = {
             name: 'sea_monster',
             description: 'cool vibes from the deep',
             properties: {
@@ -30,14 +30,43 @@ export class NFTStorageAccess {
                 health: '88'
             }
         };
+         
+        const jsonObj = {
+            directory: "./public/yaaa/",
+            fileName: "yooo.json",
+            nftData
+        }
 
         const fileData = JSON.stringify(jsonObj);
-        const fileUri =  "http://127.0.0.1:3000/storage_uri";
+        const fileUri =  "http://127.0.0.1:3000/storage_uri/";
         const response = await nodeFetch(fileUri,{
             method: 'POST',
             body: fileData,
             headers: {'Content-Type': 'application/json; charset=UTF-8'}
         });
+    }
+
+    async postMetaData(basePath, characterName, uri, id)
+    {
+        var json = {};
+        json[id] = uri;
+        const outpath = basePath + "/" + characterName + "/" + id + ".json"
+        const data = JSON.stringify(json);
+        const response = await nodeFetch(outpath, {
+            method: 'POST',
+            body: data,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'}
+        });
+        console.log(response.status)
+
+    }
+
+    async testWriteOutURI(count)
+    {
+        for(let i = 0; i < count; i++){
+            const pathBase = "http://127.0.0.1:3000/storage_uri";
+            await this.postMetaData(pathBase, "PUNK", "http://creep-kids.io", i)
+        }
     }
     
     async GetCharacterList()
@@ -49,12 +78,23 @@ export class NFTStorageAccess {
         return metaJson
     }
 
-    async GetCharacterDescriptor(metaPath)
+    async retreiveJsonData(metaPath)
     {
         const dataResponse = await nodeFetch(metaPath);
         const dataJson = await dataResponse.json();
         return dataJson;
     }
+
+    async listCharacterMetadata(count, metaPathBase)
+    {
+        for(let i = 0; i < count; i++) {
+            const path = metaPathBase + i.toString() + ".json"
+            const data = await this.retreiveJsonData(path)
+            console.log(data.attributes)
+        }
+
+    }
+
 
     async uploadCharacterSet()
     {
@@ -65,9 +105,12 @@ export class NFTStorageAccess {
         console.log(characters.names[0])
 
         const name = characters.names[0];
-        const metaPath = "http://127.0.0.1:3000/output/v5/" + name + "/meta/" + name + ".json";
-        const descriptor = await this.GetCharacterDescriptor(metaPath);
+        const metaPathBase = "http://127.0.0.1:3000/output/v5/" + name + "/meta/"
+        const descriptorPath = metaPathBase + name + ".json";
+        const descriptor = await this.retreiveJsonData(descriptorPath);
         console.log(descriptor.count);
+        //this.listCharacterMetadata(descriptor.count, metaPathBase)
+        this.testWriteOutURI(descriptor.count)
         //cycle through all assets
         //get gif
         //get metadata

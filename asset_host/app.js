@@ -30,7 +30,14 @@ app.post('/storage_uri', (req, res) => {
 })
 
 function saveToFile(json, callback) {
-  fs.writeFile('./public/test.json', JSON.stringify(json), callback)
+  const fullPath = json.directory + json.path
+  console.log("writing to path: ". uri)
+  const data = json.nftData
+  //fs.writeFile('./public/test.json', JSON.stringify(json), callback)
+  fs.mkdir(json.directory, { recursive: true }, (err) => {
+  if (err) throw err;
+});
+  fs.writeFile(fullPath, JSON.stringify(data), callback)
 }
 
 
