@@ -10,8 +10,8 @@ export class NFTStorageAccess {
         //this.uploadNFT();
         //this.uploadMainList();
         //this.uploadDirectory();
-        this.testMetadataPost();
-        //this.uploadCharacterSet();
+        //this.testMetadataPost();
+        this.uploadCharacterSet();
     }
 
     async testMetadataPost()
@@ -48,11 +48,21 @@ export class NFTStorageAccess {
 
     async postMetaData(basePath, characterName, uri, id)
     {
-        var json = {};
-        json[id] = uri;
-        const outpath = basePath + "/" + characterName + "/" + id + ".json"
-        const data = JSON.stringify(json);
-        const response = await nodeFetch(outpath, {
+        var storageURI = {};
+        storageURI[id] = uri;
+        const outBase = "./public/" + basePath + "/" + characterName + "/" 
+        const outName =  id + ".json"
+
+        console.log(outName);
+
+        const jsonObj = {
+            directory: outBase,
+            fileName: outName,
+            storageURI
+        }
+        const data = JSON.stringify(jsonObj);
+        const requestURI = "http://127.0.0.1:3000/storage_uri/" 
+        const response = await nodeFetch(requestURI, {
             method: 'POST',
             body: data,
             headers: {'Content-Type': 'application/json; charset=UTF-8'}
@@ -64,7 +74,7 @@ export class NFTStorageAccess {
     async testWriteOutURI(count)
     {
         for(let i = 0; i < count; i++){
-            const pathBase = "http://127.0.0.1:3000/storage_uri";
+            const pathBase = "nft_storage_uri";
             await this.postMetaData(pathBase, "PUNK", "http://creep-kids.io", i)
         }
     }
