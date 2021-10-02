@@ -11,8 +11,8 @@ export class NFTStorageAccess {
         //this.uploadMainList();
         //this.uploadDirectory();
         //this.testMetadataPost();
-        //this.uploadCharacterSet();
-        this.writeMain();
+        this.uploadCharacterSet();
+        //this.writeMain();
     }
 
     async testMetadataPost()
@@ -119,7 +119,6 @@ export class NFTStorageAccess {
             const data = await this.retreiveJsonData(path)
             console.log(data.attributes)
         }
-
     }
 
     async uploadCharacterSet()
@@ -136,7 +135,8 @@ export class NFTStorageAccess {
         const descriptor = await this.retreiveJsonData(descriptorPath);
         console.log(descriptor.count);
         //this.listCharacterMetadata(descriptor.count, metaPathBase)
-        this.testWriteOutURI(descriptor.count)
+        await this.testWriteOutURI(descriptor.count)
+        await this.writeMain();
         //cycle through all assets
         //get gif
         //get metadata
