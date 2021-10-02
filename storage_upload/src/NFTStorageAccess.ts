@@ -122,7 +122,6 @@ export class NFTStorageAccess {
 
     }
 
-
     async uploadCharacterSet()
     {
         const client = new NFTStorage({ token: STORAGE_API_KEY })

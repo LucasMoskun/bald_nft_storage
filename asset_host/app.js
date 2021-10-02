@@ -61,15 +61,40 @@ function saveToFile(json, callback) {
 
 function writeMain(json, callback) {
   const tree = dirTree(json.storageURIDir);
-  console.log(tree)
+
+  const children = tree.children
 
   const fullPath = json.storageURIDir + "/main_storage_uri_list.json"
+
+
+  //Create object to write out
+  var mainObj = {}
+  let fileCount = 0;
+
+  for(let i = 0; i < children.length; i++){
+    if(children[i].children !== undefined){
+      const childArray = children[i].children;
+      for(let j = 0; j < childArray.length; j++){
+        //get name of file to load
+        console.log(childArray[j].path)
+        //get storage uri from file
+        const filepath = childArray[j].path
+        var jsonURI = JSON.parse(fs.readFileSync(filepath, 'utf8'))
+        for(var key in jsonURI){
+          console.log(jsonURI[key])
+          mainObj[fileCount] = jsonURI[key]
+          fileCount++
+        }
+      }
+    }
+  }
+
 
   fs.mkdir(json.storageURIDir, { recursive: true }, (err) => {
     if (err) throw err;
   });
 
-  fs.writeFile(fullPath, JSON.stringify(tree), callback)
+  fs.writeFile(fullPath, JSON.stringify(mainObj), callback)
   
 }
 
