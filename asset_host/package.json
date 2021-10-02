@@ -9,6 +9,7 @@
   "author": "Lucas Moskun <Contact@LucasMoskun.com>",
   "license": "MIT",
   "dependencies": {
+    "directory-tree": "^3.0.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "multer": "^1.4.3"

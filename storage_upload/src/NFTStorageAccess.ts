@@ -11,7 +11,8 @@ export class NFTStorageAccess {
         //this.uploadMainList();
         //this.uploadDirectory();
         //this.testMetadataPost();
-        this.uploadCharacterSet();
+        //this.uploadCharacterSet();
+        this.writeMain();
     }
 
     async testMetadataPost()
@@ -69,6 +70,22 @@ export class NFTStorageAccess {
         });
         console.log(response.status)
 
+    }
+    
+    async writeMain()
+    {
+        const jsonObj = {
+            storageURIDir: "./public/nft_storage_uri"
+        }
+
+        const data = JSON.stringify(jsonObj);
+        const requestURI = "http://127.0.0.1:3000/compile_main/" 
+        const response = await nodeFetch(requestURI, {
+            method: 'POST',
+            body: data,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'}
+        });
+        console.log(response.status)
     }
 
     async testWriteOutURI(count)
