@@ -1,8 +1,6 @@
 import { STORAGE_API_KEY } from "./STORAGE_API_KEY.js";
 import { NFTStorage, File } from "nft.storage";
 import nodeFetch, {RequestInit} from "node-fetch";
-import {FormData} from 'formdata-node'
-//import * as FormData from 'form-data';
 
 export class NFTStorageAccess {
     constructor()
@@ -12,7 +10,8 @@ export class NFTStorageAccess {
         //this.uploadDirectory();
         //this.testMetadataPost();
         //this.uploadCharacterSet();
-        this.writeMain();
+        //this.writeMain();
+        this.uploadMainDirectory()
     }
 
     async testMetadataPost()
@@ -136,7 +135,6 @@ export class NFTStorageAccess {
         const characters = await this.GetCharacterList()
         console.log(characters)
         console.log(characters.names[0])
-
         const name = characters.names[0];
 
         //assign image and meta data paths
@@ -145,14 +143,9 @@ export class NFTStorageAccess {
         const gifPathBase = pathBase + "/gif/"
         const descriptorPath = metaPathBase + name + ".json";
 
-
         //get descriptor for asset count
         const descriptor = await this.retreiveJsonData(descriptorPath);
         console.log(descriptor.count);
-        //await this.listCharacterMetadata(descriptor.count, metaPathBase)
-        //await this.testWriteOutURI(descriptor.count)
-        //await this.writeMain();
-
 
         //for each item in descriptor
         for(let i = 0; i < descriptor.count; i++) {
@@ -252,6 +245,44 @@ export class NFTStorageAccess {
         console.log('IPFS URL for the metadata:', metadata.url)
         console.log('metadata.json contents:\n', metadata.data)
         console.log('metadata.json with IPFS gateway URLs:\n', metadata.embed())
+
+    }
+
+    async uploadMainDirectory()
+    {
+        //******************************************
+        //Current CID 'bafybeicnsuvxos3ohot6hsl7m6far3ikikobs262r72evmi2a5jo24ddau'
+        //******************************************
+        
+        const client = new NFTStorage({ token: STORAGE_API_KEY });
+        const pathBase = "http://127.0.0.1:3000/nft_storage_uri/main_storage_uri_list.json" 
+        
+        const mainResponse = await nodeFetch(pathBase);
+        const mainJson = await mainResponse.json();
+        //console.log(mainJson)
+
+        const fileArray : File[] = []
+        for(var key in mainJson){
+            console.log(key)
+            //console.log(mainJson[key]
+
+            const httpStart = "https://ipfs.io/ipfs/"
+            const ipfsURI = mainJson[key]
+            const strippedURI = ipfsURI.substring(7)
+            const httpURI = httpStart + strippedURI
+            console.log(httpURI)
+            const metaResponse = await nodeFetch(httpURI);
+            const metaJson = await metaResponse.json();
+            const fileData = JSON.stringify(metaJson);
+            const newFile : File = new File([fileData],key)
+            fileArray.push(newFile);
+        }
+
+        const cid = await client.storeDirectory(fileArray)
+        
+        console.log("Directory cid: ", cid);
+        const status = await client.status(cid);
+        console.log("Storage status: ", status);
 
     }
 
