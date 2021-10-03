@@ -112,6 +112,14 @@ export class NFTStorageAccess {
         return dataJson;
     }
 
+    async retrieveImageBytes(imagePath)
+    {
+        const httpResponse = await nodeFetch(imagePath);
+        const buffer: ArrayBuffer = await httpResponse.arrayBuffer();
+        const bytes: Uint8Array = new Uint8Array(buffer);
+        return bytes;
+    }
+
     async listCharacterMetadata(count, metaPathBase)
     {
         for(let i = 0; i < count; i++) {
@@ -130,13 +138,57 @@ export class NFTStorageAccess {
         console.log(characters.names[0])
 
         const name = characters.names[0];
-        const metaPathBase = "http://127.0.0.1:3000/output/v5/" + name + "/meta/"
+
+        //assign image and meta data paths
+        const pathBase = "http://127.0.0.1:3000/output/v5/" + name 
+        const metaPathBase = pathBase + "/meta/"
+        const gifPathBase = pathBase + "/gif/"
         const descriptorPath = metaPathBase + name + ".json";
+
+
+        //get descriptor for asset count
         const descriptor = await this.retreiveJsonData(descriptorPath);
         console.log(descriptor.count);
-        //this.listCharacterMetadata(descriptor.count, metaPathBase)
-        await this.testWriteOutURI(descriptor.count)
-        await this.writeMain();
+        //await this.listCharacterMetadata(descriptor.count, metaPathBase)
+        //await this.testWriteOutURI(descriptor.count)
+        //await this.writeMain();
+
+
+        //for each item in descriptor
+        for(let i = 0; i < descriptor.count; i++) {
+
+            //get image and metada paths
+            const metaPath = metaPathBase + i.toString() + ".json"
+            const imagePath = gifPathBase + i.toString() + ".json"
+
+            //Get json properties for image
+            const propertiesData = await this.retreiveJsonData(metaPath)
+            //console.log(propertiesData.attributes)
+
+            //get image 
+            const imageBytes = await this.retrieveImageBytes(imagePath);
+            console.log(imageBytes.length)
+
+            //upload metadata to nft storage
+            const nftDescription = "Wild in the streets"
+            const nftName = name + " " + i.toString()
+            const nftFileName = name + "_" + i.toString() + ".gif"
+            const metadata = await client.store({
+                name: nftName,
+                description: nftDescription,
+                image: new File([imageBytes], nftFileName, {type: 'image/gif'}),
+                properties: propertiesData.attributes
+            })
+
+            //write out storage matadata url
+            const pathBase = "nft_storage_uri";
+            await this.postMetaData(pathBase, name, metadata.url, i);
+
+            console.log("store: ", pathBase, " ", name, " ", metadata.url, " ", i)
+
+        }
+
+        
         //cycle through all assets
         //get gif
         //get metadata
