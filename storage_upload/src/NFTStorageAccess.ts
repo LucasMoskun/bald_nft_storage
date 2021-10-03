@@ -11,8 +11,8 @@ export class NFTStorageAccess {
         //this.uploadMainList();
         //this.uploadDirectory();
         //this.testMetadataPost();
-        this.uploadCharacterSet();
-        //this.writeMain();
+        //this.uploadCharacterSet();
+        this.writeMain();
     }
 
     async testMetadataPost()

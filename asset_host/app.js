@@ -71,20 +71,25 @@ function writeMain(json, callback) {
   var mainObj = {}
   let fileCount = 0;
 
+  console.log(children);
   for(let i = 0; i < children.length; i++){
     if(children[i].children !== undefined){
+      console.log("Children here: ", children[i].name)
       const childArray = children[i].children;
       for(let j = 0; j < childArray.length; j++){
-        //get name of file to load
-        console.log(childArray[j].path)
-        //get storage uri from file
-        const filepath = childArray[j].path
-        var jsonURI = JSON.parse(fs.readFileSync(filepath, 'utf8'))
-        for(var key in jsonURI){
-          console.log(jsonURI[key])
-          mainObj[fileCount] = jsonURI[key]
-          fileCount++
-        }
+        if(childArray[j].name !== '.DS_Store'){ 
+          //get name of file to load
+          console.log(childArray[j].path)
+          console.log(childArray[j].name)
+          //get storage uri from file
+          const filepath = childArray[j].path
+          var jsonURI = JSON.parse(fs.readFileSync(filepath, 'utf8'))
+          for(var key in jsonURI){
+            console.log(jsonURI[key])
+            mainObj[fileCount] = jsonURI[key]
+            fileCount++
+          }
+        }    
       }
     }
   }
