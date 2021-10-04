@@ -10,9 +10,9 @@ export class NFTStorageAccess {
         //this.uploadDirectory();
         //this.testMetadataPost();
         
-        this.uploadCharacterSet();
+        //this.uploadCharacterSet();
         //this.writeMain();
-        //this.uploadMainDirectory()
+        this.uploadMainDirectory()
     }
 
     async testMetadataPost()
@@ -256,8 +256,8 @@ export class NFTStorageAccess {
     async uploadMainDirectory()
     {
         //******************************************
-        //Current CID 'bafybeiew577rqzp6bpkbjwej22wjt3qnzz7dpyldpo74yd3wi6z3yrt34y
-        //Contract 0xb819D3A13562fC9cc5454776f5d67792773f32d1
+        //Current CID 'bafybeieit72jfqucbzljncdbqxoopf4gqzgdzrv5twpk4enksybmqw26tu
+        //Contract 0x865AAd4689e5aBA7D0610f3e17BAF4439EA059eC
         //******************************************
         
         const client = new NFTStorage({ token: STORAGE_API_KEY });

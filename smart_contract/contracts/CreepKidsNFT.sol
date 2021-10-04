@@ -21,7 +21,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
 
     constructor() public ERC721("Creep Kids_t7", "CKt7") {
         //chainlink
-        metadataPath = "ipfs://bafybeihef7shrdfoc366rq4l7u7womdzazk3tsrlcstvupmiv2imsyrkqq";
+        metadataPath = "ipfs://bafybeieit72jfqucbzljncdbqxoopf4gqzgdzrv5twpk4enksybmqw26tu";
     }
 
     function InitMinitOrder() private {
