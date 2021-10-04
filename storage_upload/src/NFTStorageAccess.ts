@@ -9,9 +9,10 @@ export class NFTStorageAccess {
         //this.uploadMainList();
         //this.uploadDirectory();
         //this.testMetadataPost();
-        //this.uploadCharacterSet();
+        
+        this.uploadCharacterSet();
         //this.writeMain();
-        this.uploadMainDirectory()
+        //this.uploadMainDirectory()
     }
 
     async testMetadataPost()
@@ -152,15 +153,19 @@ export class NFTStorageAccess {
 
             //get image and metada paths
             const metaPath = metaPathBase + i.toString() + ".json"
-            const imagePath = gifPathBase + i.toString() + ".json"
+            const imagePath = gifPathBase + i.toString() + ".gif"
 
             //Get json properties for image
             const propertiesData = await this.retreiveJsonData(metaPath)
             //console.log(propertiesData.attributes)
 
             //get image 
-            const imageBytes = await this.retrieveImageBytes(imagePath);
-            console.log(imageBytes.length)
+            console.log("Image path: " + imagePath);
+            const imageResponse = await nodeFetch(imagePath);
+            const buffer: ArrayBuffer = await imageResponse.arrayBuffer();
+            const bytes: Uint8Array = new Uint8Array(buffer);
+            //const imageBytes = await this.retrieveImageBytes(imagePath);
+            //console.log(imageBytes.length)
 
             //upload metadata to nft storage
             const nftDescription = "Wild in the streets"
@@ -169,8 +174,8 @@ export class NFTStorageAccess {
             const metadata = await client.store({
                 name: nftName,
                 description: nftDescription,
-                image: new File([imageBytes], nftFileName, {type: 'image/gif'}),
-                properties: propertiesData.attributes
+                image: new File([bytes], nftFileName, {type: 'image/gif'}),
+                attributes: propertiesData.attributes
             })
 
             //write out storage matadata url
@@ -251,7 +256,8 @@ export class NFTStorageAccess {
     async uploadMainDirectory()
     {
         //******************************************
-        //Current CID 'bafybeicnsuvxos3ohot6hsl7m6far3ikikobs262r72evmi2a5jo24ddau'
+        //Current CID 'bafybeiew577rqzp6bpkbjwej22wjt3qnzz7dpyldpo74yd3wi6z3yrt34y
+        //Contract 0xb819D3A13562fC9cc5454776f5d67792773f32d1
         //******************************************
         
         const client = new NFTStorage({ token: STORAGE_API_KEY });

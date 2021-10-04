@@ -19,9 +19,9 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
 
     string private Message;
 
-    constructor() public ERC721("Creep Kids_t3", "CKt3") {
+    constructor() public ERC721("Creep Kids_t7", "CKt7") {
         //chainlink
-        metadataPath = "ipfs://bafybeief4viwwiu5xh2i6ortt4mj7v3t4iyk473kjo52ajyrdx46nmbvye/";
+        metadataPath = "ipfs://bafybeihef7shrdfoc366rq4l7u7womdzazk3tsrlcstvupmiv2imsyrkqq";
     }
 
     function InitMinitOrder() private {
@@ -68,7 +68,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
         
         uint256 newID = TokenIds.current();
         string memory stringID = uintToString(newID);
-        string memory tokenURI = string(abi.encodePacked(metadataPath, stringID));
+        string memory tokenURI = string(abi.encodePacked(metadataPath,'/',stringID));
         _mint(receiver, newID);
         _setTokenURI(newID, tokenURI);
         console.log("Minted new nft");
