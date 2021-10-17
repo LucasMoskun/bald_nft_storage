@@ -12,6 +12,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
 
     Counters.Counter private TokenIds;
     uint[] MintOrder;
+    uint CurrentMintIndex;
     mapping (uint32 => address) TokenToAddress;
     
     event TokenMintEvent(uint256 newID);
@@ -19,13 +20,17 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
 
     string private Message;
 
-    constructor() public ERC721("Creep Kids_t8", "CKt8") {
-        //chainlink
+    constructor() public ERC721("Creep Kids_t9", "CKt9") {
+        //nft.storage ipfs hash
         metadataPath = "ipfs://bafybeieit72jfqucbzljncdbqxoopf4gqzgdzrv5twpk4enksybmqw26tu";
+
+        //random mint initialization
+        CurrentMintIndex = 0;
+        InitMinitOrder();
     }
 
     function InitMinitOrder() private {
-       uint count = 5;
+       uint count = 89;
        MintOrder = new uint[](count);
 
        for(uint i = 0; i < count; i++){
@@ -34,7 +39,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     }
 
     function ShuffleMintOrder() private {
-        for(uint i = 0; i < MintOrder.length; i++){
+        for(uint i = CurrentMintIndex; i < MintOrder.length; i++){
             uint randIndex = 
                 i + uint256(keccak256(abi.encodePacked(block.timestamp))) %
                 (MintOrder.length - i);
@@ -67,13 +72,14 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     {
         
         uint256 newID = TokenIds.current();
-        string memory stringID = uintToString(newID);
-        string memory tokenURI = string(abi.encodePacked(metadataPath,'/',stringID));
+        string memory randomID = uintToString(MintOrder[CurrentMintIndex]);
+        string memory tokenURI = string(abi.encodePacked(metadataPath,'/',randomID));
         _mint(receiver, newID);
         _setTokenURI(newID, tokenURI);
-        console.log("Minted new nft");
 
         TokenIds.increment();
+        CurrentMintIndex++;
+        ShuffleMintOrder();
         TokenMintEvent(newID);
         Message = tokenURI;
         return newID;
