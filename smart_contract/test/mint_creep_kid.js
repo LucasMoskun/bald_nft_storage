@@ -1,7 +1,7 @@
 const {expect} = require("chai");
 
 describe("Creep Kid Mint Test", function () {
-  this.timeout(800000)
+  this.timeout(8000000000)
   it("Minting creep kids", async function () {
 
     console.log("Getting Signers");
@@ -15,7 +15,7 @@ describe("Creep Kid Mint Test", function () {
     const contract = await token.attach(contractAddress);
     await contract.connect(owner.address);
 
-    for(let i = 0; i < 78; i++){
+    for(let i = 0; i < 66; i++){
       console.log("Minting NFT count: ", i)
       const mintTx = await contract.createCreepKid(owner.address);
       const receipt = await mintTx.wait();

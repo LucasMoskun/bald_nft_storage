@@ -258,6 +258,7 @@ export class NFTStorageAccess {
         //******************************************
         //Current CID 'bafybeieit72jfqucbzljncdbqxoopf4gqzgdzrv5twpk4enksybmqw26tu
         //Contract 0x865AAd4689e5aBA7D0610f3e17BAF4439EA059eC
+        //current contract 0x998BA9FaF4052f542124A638c0b3606C743495aB
         //******************************************
         
         const client = new NFTStorage({ token: STORAGE_API_KEY });
