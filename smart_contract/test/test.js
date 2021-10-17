@@ -22,13 +22,13 @@ describe("Creep Kid Test", function() {
 
 
     console.log("Requesting data...");
-    const mintTx = await contract.createCreepKid(owner.address);
+    const mintTx = await contract.createCreepKid(owner.address, 2);
     const receipt = await mintTx.wait();
     console.log("Token ID: ", receipt.events?.filter((x) => {return x.event == "TokenMintEvent"}));
     console.log("Token URI: ", await contract.getMessage());
 
     console.log("Requesting data...");
-    const mintTx2 = await contract.createCreepKid(owner.address);
+    const mintTx2 = await contract.createCreepKid(owner.address, 4);
     const receipt2 = await mintTx2.wait();
     console.log("Token ID: ", receipt2.events?.filter((x) => {return x.event == "TokenMintEvent"}));
     console.log("Token URI: ", await contract.getMessage());
