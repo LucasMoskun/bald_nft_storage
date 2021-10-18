@@ -69,12 +69,13 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     function createCreepKid(address receiver, uint count)
         public onlyOwner
     {
-        //TODO Assert < 10 && less 1000;
+        require(count <= 10, "Not allowed to mint more than 10 at once!");
+        require((count + CurrentMintIndex + 1) < 1000, "Unable to mint, not enough creep kids left :-(");
+
         for(uint i = 0; i < count; i++)
         {
             _mintCreepKid(receiver);
         }
-
     }
 
     function _mintCreepKid(address receiver)
@@ -86,6 +87,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
         string memory tokenURI = string(abi.encodePacked(metadataPath,'/',randomID));
         _mint(receiver, newID);
         _setTokenURI(newID, tokenURI);
+        console.log(tokenURI);
 
         TokenIds.increment();
         CurrentMintIndex++;
