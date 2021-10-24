@@ -20,6 +20,10 @@ describe("Creep Kid Test", function() {
     const contract = await token.deploy();
     console.log("Contract address:" + contract.address);
 
+    //test promo mint
+    console.log("Promo Mint...");
+    const promoTx = await contract.promoMint(owner.address, 8);
+
     //Test mint and owner withdraw
     console.log("Owner balance: " +  await owner.getBalance());
     console.log("Requesting data...");

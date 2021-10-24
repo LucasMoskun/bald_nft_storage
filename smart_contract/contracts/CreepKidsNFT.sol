@@ -13,7 +13,11 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     Counters.Counter private TokenIds;
     uint[] MintOrder;
     uint CurrentMintIndex;
+    uint PromoMintCount;
     mapping (uint32 => address) TokenToAddress;
+    mapping (address => bool) whitelist;
+    bool Unlocked;
+    
     
     event TokenMintEvent(uint256 newID);
     string private metadataPath;  
@@ -21,6 +25,11 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     string private Message;
 
     constructor() public ERC721("Creep Kids_t9", "CKt9") {
+        //security
+        addToWhitelist(msg.sender);
+        Unlocked = false;
+        PromoMintCount = 50;
+
         //nft.storage ipfs hash
         metadataPath = "ipfs://bafybeieit72jfqucbzljncdbqxoopf4gqzgdzrv5twpk4enksybmqw26tu";
 
@@ -49,6 +58,10 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
         }
     }
 
+    function unlock() public onlyOwner {
+        Unlocked = true;
+    }
+
     function safeMint(address to, uint256 tokenId) public onlyOwner {
         _safeMint(to, tokenId);
     }
@@ -69,6 +82,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     function createCreepKid(address receiver, uint count)
         public payable onlyOwner
     {
+        require(Unlocked, "Creep Kid Minting is still Locked :-/");
         require(count <= 10, "Not allowed to mint more than 10 at once!");
         require(msg.value >= 0.0001 ether * count, "Not enough eth paid! .0666 per creep");
         require((count + CurrentMintIndex + 1) < 1000, "Unable to mint, not enough creep kids left :-(");
@@ -77,6 +91,23 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
         {
             _mintCreepKid(receiver);
         }
+    }
+
+    function promoMint(address receiver, uint count)
+    public onlyWhitelisted 
+    {
+        require(PromoMintCount > 0, "Promo mints exhausted :-(");
+        require(count <= 10, "Max per mint is 10!");
+        require(PromoMintCount - count > 0, "Count exheeds promo count");
+
+        PromoMintCount -= count;
+
+        console.log("Promom count: ", PromoMintCount);
+        for(uint i = 0; i < count; i++)
+        {
+            _mintCreepKid(receiver);
+        }
+
     }
 
     function _mintCreepKid(address receiver)
@@ -108,10 +139,25 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
         payable(msg.sender).transfer(address(this).balance);
     }
 
-    function getMessage() external view returns(string memory){
-        return Message;
+    //WHITELIST
+    modifier onlyWhitelisted() {
+        require (isWhitelisted(msg.sender));
+        _;
     }
 
+    function isWhitelisted(address _address) public view returns(bool){
+        return whitelist[_address];
+    }
+
+    function addToWhitelist(address _address) public onlyOwner {
+        whitelist[_address] = true;
+    }
+
+    function removeFromWhitelist(address _address) public onlyOwner {
+        whitelist[_address] = false;
+    }
+
+    //ENCODING
     function concatenate(bytes32 x, bytes32 y) public pure returns (bytes memory) {
         return abi.encodePacked(x, y);
     }
