@@ -20,12 +20,19 @@ describe("Creep Kid Test", function() {
     const contract = await token.deploy();
     console.log("Contract address:" + contract.address);
 
-
+    //Test mint and owner withdraw
+    console.log("Owner balance: " +  await owner.getBalance());
     console.log("Requesting data...");
-    const mintTx = await contract.createCreepKid(owner.address, 10);
+    const mintTx = await contract.createCreepKid(owner.address, 1, 
+      {value: ethers.utils.parseEther("0.001")});
     const receipt = await mintTx.wait();
     console.log("Token ID: ", receipt.events?.filter((x) => {return x.event == "TokenMintEvent"}));
     console.log("Token URI: ", await contract.getMessage());
+    console.log("contract balance " + await contract.getBalance());
+    console.log("Owner balance: " +  await owner.getBalance());
+    await contract.withdraw(await contract.getBalance());
+    console.log("Owner balance: " +  await owner.getBalance());
+
 
     console.log("Requesting data...");
     const mintTx2 = await contract.createCreepKid(owner.address, 4);

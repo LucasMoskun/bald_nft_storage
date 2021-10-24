@@ -67,9 +67,10 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     }
 
     function createCreepKid(address receiver, uint count)
-        public onlyOwner
+        public payable onlyOwner
     {
         require(count <= 10, "Not allowed to mint more than 10 at once!");
+        require(msg.value >= 0.0001 ether * count, "Not enough eth paid! .0666 per creep");
         require((count + CurrentMintIndex + 1) < 1000, "Unable to mint, not enough creep kids left :-(");
 
         for(uint i = 0; i < count; i++)
@@ -94,6 +95,17 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
         ShuffleMintOrder();
         TokenMintEvent(newID);
         Message = tokenURI;
+    }
+
+    //PAYABLE
+    function getBalance() public view returns (uint256){
+        return address(this).balance;
+    }
+
+    function withdraw(uint256 amount)
+    public onlyOwner
+    {
+        payable(msg.sender).transfer(address(this).balance);
     }
 
     function getMessage() external view returns(string memory){
