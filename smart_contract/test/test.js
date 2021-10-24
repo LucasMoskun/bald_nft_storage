@@ -24,6 +24,10 @@ describe("Creep Kid Test", function() {
     console.log("Promo Mint...");
     const promoTx = await contract.promoMint(owner.address, 8);
 
+    //test unlock
+    console.log("Unlocking...")
+    const unlockTx = await contract.unlock();
+
     //Test mint and owner withdraw
     console.log("Owner balance: " +  await owner.getBalance());
     console.log("Requesting data...");
