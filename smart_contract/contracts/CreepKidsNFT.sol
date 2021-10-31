@@ -20,6 +20,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     
     
     event TokenMintEvent(uint256 newID);
+    
     string private metadataPath;  
 
     string private Message;
@@ -62,10 +63,6 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
         Unlocked = true;
     }
 
-    function safeMint(address to, uint256 tokenId) public onlyOwner {
-        _safeMint(to, tokenId);
-    }
-
     function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
         super._burn(tokenId);
     }
@@ -80,7 +77,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     }
 
     function createCreepKid(address receiver, uint count)
-        public payable onlyOwner
+        public payable
     {
         require(Unlocked, "Creep Kid Minting is still Locked :-/");
         require(count <= 10, "Not allowed to mint more than 10 at once!");
@@ -98,7 +95,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     {
         require(PromoMintCount > 0, "Promo mints exhausted :-(");
         require(count <= 10, "Max per mint is 10!");
-        require(PromoMintCount - count > 0, "Count exheeds promo count");
+        require(PromoMintCount - count > 0, "Count exceeds promo count");
 
         PromoMintCount -= count;
 
@@ -117,7 +114,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
         uint256 newID = TokenIds.current();
         string memory randomID = uintToString(MintOrder[CurrentMintIndex]);
         string memory tokenURI = string(abi.encodePacked(metadataPath,'/',randomID));
-        _mint(receiver, newID);
+        _safeMint(receiver, newID);
         _setTokenURI(newID, tokenURI);
         console.log(tokenURI);
 
@@ -136,7 +133,8 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     function withdraw(uint256 amount)
     public onlyOwner
     {
-        payable(msg.sender).transfer(address(this).balance);
+        require(amount =< address(this).balance, "Amount requested is too much");
+        payable(msg.sender).transfer(amount);
     }
 
     //WHITELIST
@@ -196,5 +194,4 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
         }
         return string(bstr);
     }
-
 }
