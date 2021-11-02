@@ -9,8 +9,14 @@ describe("Creep Kid Deploy", function() {
     const token = await ethers.getContractFactory("CreepKidsNFT");
 
     console.log("Deploying contract...");
-    const contract = await token.deploy();
+    const contract = await token.deploy({
+      gasLimit:6660666
+    });
     console.log("Contract address: " + contract.address);
+    console.log("transaction hash: " + contract.deployTransaction.hash);
+    await contract.deployed();
+
+    console.log("Deployed");
 
   });
 });

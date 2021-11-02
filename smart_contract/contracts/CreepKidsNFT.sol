@@ -88,7 +88,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     {
         require(PromoMintCount > 0, "Promo mints exhausted :-(");
         require(count <= 10, "Max per mint is 10!");
-        require(PromoMintCount - count > 0, "Count exceeds promo count");
+        require(PromoMintCount + 1 - count > 0, "Count exceeds promo count");
 
         PromoMintCount -= count;
 
@@ -102,7 +102,6 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     private
     {
         uint256 newID = TokenIds.current();
-        //string memory randomID = uintToString(MintOrder[CurrentMintIndex]);
         string memory randomID = uintToString(randomIndex());
         string memory tokenURI = string(abi.encodePacked(metadataPath,'/',randomID));
         _safeMint(receiver, newID);
