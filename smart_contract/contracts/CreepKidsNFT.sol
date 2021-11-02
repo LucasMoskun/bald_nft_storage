@@ -5,70 +5,56 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+import "hardhat/console.sol";
+
 contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private TokenIds;
-    uint[] MintOrder;
     uint CurrentMintIndex;
     uint PromoMintCount;
-    mapping (uint32 => address) TokenToAddress;
-    mapping (address => bool) whitelist;
     bool Unlocked;
     
+    uint constant public TotalCount = 1000;
+    uint[TotalCount] private Indices;
     
     event TokenMintEvent(uint256 newID);
     
     string private metadataPath;  
 
-    constructor() public ERC721("Creep Kids_t12", "CKtX") {
+    constructor() public ERC721("Creep Kids_t13", "CxY") {
         //security
         Unlocked = false;
         PromoMintCount = 50;
 
         //nft.storage ipfs hash
         metadataPath = "ipfs://QmWbNqmucZvBNGpyP724eCsoMFqdepnnjb6o7u5oLkDdcp";
-
-        //random mint initialization
-        CurrentMintIndex = 0;
     }
+    
+    //Thank you to the DerpyBirbs & NOOBS 
+    function randomIndex() internal returns (uint) {
+        uint totalSize = TotalCount - CurrentMintIndex;
+        uint index = uint(keccak256(abi.encodePacked(CurrentMintIndex, msg.sender, block.difficulty, block.timestamp))) % totalSize;
+        uint value = 0;
 
-    function initMinitOrder() 
-    public onlyOwner
-    {
-       uint count = 1000;
-       MintOrder = new uint[](count);
-
-       for(uint i = 0; i < count; i++){
-           MintOrder[i] = i;
-       }
-    }
-
-    function _shuffleMintOrder(uint shuffleNum) private {
-        uint cap;
-        if(MintOrder.length - CurrentMintIndex > 150)
-        {
-            cap = CurrentMintIndex + shuffleNum;
+        if (Indices[index] != 0) {
+            value = Indices[index];
+        } else {
+            value = index;
         }
-        else
-        {
-            cap = MintOrder.length;
+
+        // Move last value to selected position
+        if (Indices[totalSize - 1] == 0) {
+            // Array position not initialized, so use position
+            Indices[index] = totalSize - 1;
+        } else {
+            // Array position holds a value so use that
+            Indices[index] = Indices[totalSize - 1];
         }
-        for(uint i = CurrentMintIndex; i < cap; i++){
-            uint randIndex = 
-                i + uint256(keccak256(abi.encodePacked(block.timestamp))) %
-                (cap - i);
-            uint holder = MintOrder[randIndex];
-            MintOrder[randIndex] = MintOrder[i];
-            MintOrder[i] = holder;
-        }
+        return value;
     }
 
-    function fullShuffle()
-    public onlyOwner
-    {
-        _shuffleMintOrder(MintOrder.length);
-    }
+
 
     function unlock() public onlyOwner {
         Unlocked = true;
@@ -93,13 +79,12 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
         require(Unlocked, "Creep Kid Minting is still Locked :-/");
         require(count <= 10, "Not allowed to mint more than 10 at once!");
         require(msg.value >= 0.0001 ether * count, "Not enough eth paid! .0666 per creep");
-        require((count + CurrentMintIndex + 1) < 1000, "Unable to mint, not enough creep kids left :-(");
+        require((count + CurrentMintIndex-1) < 1000, "Unable to mint, not enough creep kids left :-(");
 
         for(uint i = 0; i < count; i++)
         {
             _mintCreepKid(receiver);
         }
-        _shuffleMintOrder(100);
     }
 
     function promoMint(address receiver, uint count)
@@ -115,18 +100,19 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
         {
             _mintCreepKid(receiver);
         }
-        _shuffleMintOrder(100);
     }
 
     function _mintCreepKid(address receiver)
     private
     {
         uint256 newID = TokenIds.current();
-        string memory randomID = uintToString(MintOrder[CurrentMintIndex]);
+        //string memory randomID = uintToString(MintOrder[CurrentMintIndex]);
+        string memory randomID = uintToString(randomIndex());
         string memory tokenURI = string(abi.encodePacked(metadataPath,'/',randomID));
         _safeMint(receiver, newID);
         _setTokenURI(newID, tokenURI);
 
+        console.log(randomID);
         TokenIds.increment();
         CurrentMintIndex++;
         TokenMintEvent(newID);

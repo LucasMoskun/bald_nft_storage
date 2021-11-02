@@ -11,12 +11,12 @@ describe("Creep Kid Mint Test", function () {
     const token = await ethers.getContractFactory("CreepKidsNFT");
 
     console.log("Connecting to contract");
-    const contractAddress = "0xbD0AE06501843DF64040A8fbf3e0C50A0D24ED73"
+    const contractAddress = "0x1880632CF9992407095F620BFCDDb1CEE4EB35Cc"
     const contract = await token.attach(contractAddress);
     await contract.connect(owner.address);
 
     console.log("Minting NFT");
-    const mintTx = await contract.promoMint(owner.address, 1);
+    const mintTx = await contract.promoMint(owner.address, 10);
     //console.log("Token ID: ", receipt.events?.filter((x) => {return x.event == "TokenMintEvent"}))
     //console.log("Token URI: ", await contract.getMessage());
 
