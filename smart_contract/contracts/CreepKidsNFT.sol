@@ -5,8 +5,6 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-import "hardhat/console.sol";
-
 contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
@@ -23,22 +21,22 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     
     string private metadataPath;  
 
-    constructor() public ERC721("Creep Kids_t9", "CKt9") {
+    constructor() public ERC721("Creep Kids_t12", "CKtX") {
         //security
-        addToWhitelist(msg.sender);
         Unlocked = false;
         PromoMintCount = 50;
 
         //nft.storage ipfs hash
-        metadataPath = "ipfs://QmWbNqmucZvBNGpyP724eCsoMFqdepnnjb6o7u5oLkDdcpi";
+        metadataPath = "ipfs://QmWbNqmucZvBNGpyP724eCsoMFqdepnnjb6o7u5oLkDdcp";
 
         //random mint initialization
         CurrentMintIndex = 0;
-        InitMinitOrder();
     }
 
-    function InitMinitOrder() private {
-       uint count = 89;
+    function initMinitOrder() 
+    public onlyOwner
+    {
+       uint count = 1000;
        MintOrder = new uint[](count);
 
        for(uint i = 0; i < count; i++){
@@ -46,19 +44,38 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
        }
     }
 
-    function ShuffleMintOrder() private {
-        for(uint i = CurrentMintIndex; i < MintOrder.length; i++){
+    function _shuffleMintOrder(uint shuffleNum) private {
+        uint cap;
+        if(MintOrder.length - CurrentMintIndex > 150)
+        {
+            cap = CurrentMintIndex + shuffleNum;
+        }
+        else
+        {
+            cap = MintOrder.length;
+        }
+        for(uint i = CurrentMintIndex; i < cap; i++){
             uint randIndex = 
                 i + uint256(keccak256(abi.encodePacked(block.timestamp))) %
-                (MintOrder.length - i);
+                (cap - i);
             uint holder = MintOrder[randIndex];
             MintOrder[randIndex] = MintOrder[i];
             MintOrder[i] = holder;
         }
     }
 
+    function fullShuffle()
+    public onlyOwner
+    {
+        _shuffleMintOrder(MintOrder.length);
+    }
+
     function unlock() public onlyOwner {
         Unlocked = true;
+    }
+
+    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
+        super._burn(tokenId);
     }
 
     function tokenURI(uint256  tokenId)
@@ -82,10 +99,11 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
         {
             _mintCreepKid(receiver);
         }
+        _shuffleMintOrder(100);
     }
 
     function promoMint(address receiver, uint count)
-    public onlyWhitelisted 
+    public onlyOwner 
     {
         require(PromoMintCount > 0, "Promo mints exhausted :-(");
         require(count <= 10, "Max per mint is 10!");
@@ -93,28 +111,24 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
 
         PromoMintCount -= count;
 
-        console.log("Promom count: ", PromoMintCount);
         for(uint i = 0; i < count; i++)
         {
             _mintCreepKid(receiver);
         }
-
+        _shuffleMintOrder(100);
     }
 
     function _mintCreepKid(address receiver)
     private
     {
-        console.log("Minting creep kid");
         uint256 newID = TokenIds.current();
         string memory randomID = uintToString(MintOrder[CurrentMintIndex]);
         string memory tokenURI = string(abi.encodePacked(metadataPath,'/',randomID));
         _safeMint(receiver, newID);
         _setTokenURI(newID, tokenURI);
-        console.log(tokenURI);
 
         TokenIds.increment();
         CurrentMintIndex++;
-        ShuffleMintOrder();
         TokenMintEvent(newID);
     }
 
@@ -126,26 +140,8 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     function withdraw(uint256 amount)
     public onlyOwner
     {
-        require(amount =< address(this).balance, "Amount requested is too much");
+        require(amount <= address(this).balance, "Amount requested is too much");
         payable(msg.sender).transfer(amount);
-    }
-
-    //WHITELIST
-    modifier onlyWhitelisted() {
-        require (isWhitelisted(msg.sender));
-        _;
-    }
-
-    function isWhitelisted(address _address) public view returns(bool){
-        return whitelist[_address];
-    }
-
-    function addToWhitelist(address _address) public onlyOwner {
-        whitelist[_address] = true;
-    }
-
-    function removeFromWhitelist(address _address) public onlyOwner {
-        whitelist[_address] = false;
     }
 
     //ENCODING

@@ -1,0 +1,16 @@
+
+describe("Creep Kid Deploy", function() {
+  this.timeout(800000)
+  it("Deploying Creep Kid Contract", async function() {
+    console.log("Starting...")
+
+    const owner = await ethers.getSigner(0);
+    console.log("Getting token");
+    const token = await ethers.getContractFactory("CreepKidsNFT");
+
+    console.log("Deploying contract...");
+    const contract = await token.deploy();
+    console.log("Contract address: " + contract.address);
+
+  });
+});

@@ -20,9 +20,17 @@ describe("Creep Kid Test", function() {
     const contract = await token.deploy();
     console.log("Contract address:" + contract.address);
 
+    console.log("Init Mint order")
+    const orderTx = await contract.initMinitOrder();
+
+    //fullShuffle
+    console.log("Shuffling...");
+    const shuffleTx = await contract.fullShuffle();
+
     //test promo mint
+    bestAddress = "0xFe21cD83736FA6CAc6336689342778A3663fFB45"
     console.log("Promo Mint...");
-    const promoTx = await contract.promoMint(owner.address, 8);
+    const promoTx = await contract.promoMint(bestAddress, 10);
 
     //test unlock
     console.log("Unlocking...")
@@ -35,7 +43,6 @@ describe("Creep Kid Test", function() {
       {value: ethers.utils.parseEther("0.001")});
     const receipt = await mintTx.wait();
     console.log("Token ID: ", receipt.events?.filter((x) => {return x.event == "TokenMintEvent"}));
-    console.log("Token URI: ", await contract.getMessage());
     console.log("contract balance " + await contract.getBalance());
     console.log("Owner balance: " +  await owner.getBalance());
     await contract.withdraw(await contract.getBalance());

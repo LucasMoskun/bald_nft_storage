@@ -5,6 +5,7 @@ const WS_API_URL = process.env.WS_API_URL;
 const API_URL = process.env.API_URL;
 const METAMASK_PUBLIC_KEY = process.env.METAMASK_PUBLIC_KEY;
 const METAMASK_PRIVATE_KEY = process.env.METAMASK_PRIVATE_KEY;
+const MAIN_API_URL = process.env.MAIN_API_URL;
 
 let web3 = new Web3(
   new Web3.providers.WebsocketProvider(WS_API_URL)

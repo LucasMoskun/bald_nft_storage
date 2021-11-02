@@ -6,7 +6,7 @@ require("@nomiclabs/hardhat-waffle")
 require("hardhat-gas-reporter");
 require("hardhat-etherscan-abi")
 
-const {API_URL, METAMASK_PRIVATE_KEY, COIN_API} = process.env;
+const {MAIN_API_URL, API_URL, METAMASK_PRIVATE_KEY, COIN_API} = process.env;
 module.exports = {
   solidity: "0.8.0",
   defaultNetwork: "hardhat",
@@ -14,6 +14,10 @@ module.exports = {
     hardhat: {},
     rinkeby: {
       url: API_URL,
+      accounts: [`0x${METAMASK_PRIVATE_KEY}`]
+    },
+    mainnet: {
+      url: MAIN_API_URL,
       accounts: [`0x${METAMASK_PRIVATE_KEY}`]
     }
   },
