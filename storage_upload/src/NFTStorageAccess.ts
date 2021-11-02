@@ -3,6 +3,28 @@ import { NFTStorage, File } from "nft.storage";
 import nodeFetch, {RequestInit} from "node-fetch";
 
 export class NFTStorageAccess {
+    
+    assetPathBase = "http://127.0.0.1:3000/output/final/"
+    characr_names_uri  = this.assetPathBase + "character_names.json";
+    //TODO this should be automated -- need to change per mint for now
+
+    //punk
+    //character_description = "Anti-establishment, pro-violence"
+    //vampire
+    //character_description = "Immortal soul who feeds off the living"
+    //Sea Monster
+    //character_description = "From the depths of the darkest waters"
+    //princess
+    //character_description = "Fallen from grace and starving for brutality"
+    //Zombie
+    //character_description = "Reanimated from death and hungry for human flesh"
+    //Demon
+    //character_description = "Superiorly evil and hostile to all"
+    //wolfman
+    character_description = "Twilight shapeshifter" 
+    //Alien
+    //character_description = "Interstellar mind controller"
+    
     constructor()
     {
         //this.uploadNFT();
@@ -10,9 +32,13 @@ export class NFTStorageAccess {
         //this.uploadDirectory();
         //this.testMetadataPost();
         
+        //TODO: really shouldn't just be uncommoneting these one by one...
+        //Final sequence
         //this.uploadCharacterSet();
         //this.writeMain();
         this.uploadMainDirectory()
+        
+        //this.GetCharacterList();
     }
 
     async testMetadataPost()
@@ -61,6 +87,7 @@ export class NFTStorageAccess {
             fileName: outName,
             storageURI
         }
+
         const data = JSON.stringify(jsonObj);
         const requestURI = "http://127.0.0.1:3000/storage_uri/" 
         const response = await nodeFetch(requestURI, {
@@ -68,6 +95,24 @@ export class NFTStorageAccess {
             body: data,
             headers: {'Content-Type': 'application/json; charset=UTF-8'}
         });
+        console.log(response.status)
+    }
+
+    async postIPFSMetaLocal(basePath, name, data)
+    {
+        const jsonObj = {
+            directory: "./public/" + basePath + '/',
+            fileName: name,
+            storageURI: data
+        }
+
+        const sendData = JSON.stringify(jsonObj);
+        const requestURI = "http://127.0.0.1:3000/storage_uri/"
+        const response = await nodeFetch(requestURI, {
+            method: 'POST',
+            body: sendData,
+            headers: {'Content-Type': 'application/json; charset=UTF-8'}
+        })
         console.log(response.status)
 
     }
@@ -98,8 +143,7 @@ export class NFTStorageAccess {
     
     async GetCharacterList()
     {
-        const metaFileUri = "http://127.0.0.1:3000/output/v5/character_names.json";
-
+        const metaFileUri = this.characr_names_uri;
         const metaResponse = await nodeFetch(metaFileUri);
         const metaJson = await metaResponse.json();
         return metaJson
@@ -139,10 +183,10 @@ export class NFTStorageAccess {
         const name = characters.names[0];
 
         //assign image and meta data paths
-        const pathBase = "http://127.0.0.1:3000/output/v5/" + name 
-        const metaPathBase = pathBase + "/meta/"
+        const pathBase = this.assetPathBase + name 
+        const metaPathBase = pathBase + "/clean_meta/"
         const gifPathBase = pathBase + "/gif/"
-        const descriptorPath = metaPathBase + name + ".json";
+        const descriptorPath = gifPathBase + name + ".json";
 
         //get descriptor for asset count
         const descriptor = await this.retreiveJsonData(descriptorPath);
@@ -168,7 +212,7 @@ export class NFTStorageAccess {
             //console.log(imageBytes.length)
 
             //upload metadata to nft storage
-            const nftDescription = "Wild in the streets"
+            const nftDescription = this.character_description
             const nftName = name + " " + i.toString()
             const nftFileName = name + "_" + i.toString() + ".gif"
             const metadata = await client.store({
@@ -261,7 +305,6 @@ export class NFTStorageAccess {
         //current contract 0x998BA9FaF4052f542124A638c0b3606C743495aB
         //******************************************
         
-        const client = new NFTStorage({ token: STORAGE_API_KEY });
         const pathBase = "http://127.0.0.1:3000/nft_storage_uri/main_storage_uri_list.json" 
         
         const mainResponse = await nodeFetch(pathBase);
@@ -271,7 +314,6 @@ export class NFTStorageAccess {
         const fileArray : File[] = []
         for(var key in mainJson){
             console.log(key)
-            //console.log(mainJson[key]
 
             const httpStart = "https://ipfs.io/ipfs/"
             const ipfsURI = mainJson[key]
@@ -283,8 +325,13 @@ export class NFTStorageAccess {
             const fileData = JSON.stringify(metaJson);
             const newFile : File = new File([fileData],key)
             fileArray.push(newFile);
+
+            //store locally
+            await this.postIPFSMetaLocal("final_ipfs", key, metaJson);
         }
 
+        const client = new NFTStorage({ token: STORAGE_API_KEY });
+        console.log("Attempting storage upload...")
         const cid = await client.storeDirectory(fileArray)
         
         console.log("Directory cid: ", cid);
@@ -320,7 +367,5 @@ export class NFTStorageAccess {
         console.log("Directory cid: ", cid);
         const status = await client.status(cid);
         console.log("Storage status: ", status);
-
-
     }
 }
