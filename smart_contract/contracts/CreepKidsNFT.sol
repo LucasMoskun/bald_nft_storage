@@ -5,8 +5,6 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-import "hardhat/console.sol";
-
 contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
@@ -22,7 +20,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     
     string private metadataPath;  
 
-    constructor() public ERC721("Creep Kids_t13", "CxY") {
+    constructor() public ERC721("Creep Kids", "KIDS") {
         //security
         Unlocked = false;
         PromoMintCount = 50;
@@ -54,8 +52,6 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
         return value;
     }
 
-
-
     function unlock() public onlyOwner {
         Unlocked = true;
     }
@@ -78,7 +74,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     {
         require(Unlocked, "Creep Kid Minting is still Locked :-/");
         require(count <= 10, "Not allowed to mint more than 10 at once!");
-        require(msg.value >= 0.0001 ether * count, "Not enough eth paid! .0666 per creep");
+        require(msg.value >= 0.0666 ether * count, "Not enough eth paid! .0666 per creep");
         require((count + CurrentMintIndex-1) < 1000, "Unable to mint, not enough creep kids left :-(");
 
         for(uint i = 0; i < count; i++)
@@ -112,7 +108,6 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
         _safeMint(receiver, newID);
         _setTokenURI(newID, tokenURI);
 
-        console.log(randomID);
         TokenIds.increment();
         CurrentMintIndex++;
         TokenMintEvent(newID);
