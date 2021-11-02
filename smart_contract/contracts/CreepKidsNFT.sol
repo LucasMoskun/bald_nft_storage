@@ -23,8 +23,6 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
     
     string private metadataPath;  
 
-    string private Message;
-
     constructor() public ERC721("Creep Kids_t9", "CKt9") {
         //security
         addToWhitelist(msg.sender);
@@ -32,7 +30,7 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
         PromoMintCount = 50;
 
         //nft.storage ipfs hash
-        metadataPath = "ipfs://bafybeieit72jfqucbzljncdbqxoopf4gqzgdzrv5twpk4enksybmqw26tu";
+        metadataPath = "ipfs://QmWbNqmucZvBNGpyP724eCsoMFqdepnnjb6o7u5oLkDdcpi";
 
         //random mint initialization
         CurrentMintIndex = 0;
@@ -61,10 +59,6 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
 
     function unlock() public onlyOwner {
         Unlocked = true;
-    }
-
-    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
-        super._burn(tokenId);
     }
 
     function tokenURI(uint256  tokenId)
@@ -122,7 +116,6 @@ contract CreepKidsNFT is ERC721, ERC721URIStorage, Ownable {
         CurrentMintIndex++;
         ShuffleMintOrder();
         TokenMintEvent(newID);
-        Message = tokenURI;
     }
 
     //PAYABLE
