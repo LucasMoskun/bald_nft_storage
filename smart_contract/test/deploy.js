@@ -16,7 +16,6 @@ describe("Creep Kid Deploy", function() {
     console.log("transaction hash: " + contract.deployTransaction.hash);
     await contract.deployed();
 
-    console.log("Deployed");
 
   });
 });
