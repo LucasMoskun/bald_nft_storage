@@ -17,11 +17,11 @@ export class NFTStorageAccess {
     //princess
     //character_description = "Fallen from grace and starving for brutality"
     //Zombie
-    //character_description = "Reanimated from death and hungry for human flesh"
+    character_description = "Reanimated from death and hungry for human flesh"
     //Demon
     //character_description = "Superiorly evil and hostile to all"
     //wolfman
-    character_description = "Twilight shapeshifter" 
+    //character_description = "Twilight shapeshifter" 
     //Alien
     //character_description = "Interstellar mind controller"
     
@@ -176,6 +176,7 @@ export class NFTStorageAccess {
     async uploadCharacterSet()
     {
         const client = new NFTStorage({ token: STORAGE_API_KEY })
+
         //Get list of file names
         const characters = await this.GetCharacterList()
         console.log(characters)
@@ -330,13 +331,13 @@ export class NFTStorageAccess {
             await this.postIPFSMetaLocal("final_ipfs", key, metaJson);
         }
 
-        const client = new NFTStorage({ token: STORAGE_API_KEY });
-        console.log("Attempting storage upload...")
-        const cid = await client.storeDirectory(fileArray)
-        
-        console.log("Directory cid: ", cid);
-        const status = await client.status(cid);
-        console.log("Storage status: ", status);
+        //const client = new NFTStorage({ token: STORAGE_API_KEY });
+        //console.log("Attempting storage upload...")
+        //const cid = await client.storeDirectory(fileArray)
+        //
+        //console.log("Directory cid: ", cid);
+        //const status = await client.status(cid);
+        //console.log("Storage status: ", status);
 
     }
 
